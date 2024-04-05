@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  age: 1
+  country: MyString
+  role: 1
+  matches_played: 1
+  runs_scored: 1
+  wickets_taken: 1
+  highest_score: 1
+  best_bowling: MyString
+  captain: false
+  retired: false
+
+two:
+  name: MyString
+  age: 1
+  country: MyString
+  role: 1
+  matches_played: 1
+  runs_scored: 1
+  wickets_taken: 1
+  highest_score: 1
+  best_bowling: MyString
+  captain: false
+  retired: false

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Practice</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= javascript_include_tag "turbo", type: "module" %>
+    <!-- <iframe src="/assets/sample-5s-e31290e0505d3369678ca030605c35b26afa5d5af301561b766d87da0f4ced5d.mp4"></iframe> -->
+    
+    <%#= video_tag "sample-5s.mp4", :size => "320x240", :controls => true %>
+    <%#= audio_tag "Maan_Meri_Jaan(PagalWorld.com.se).mp3",controls: true%>
+    <%#= image_tag "downloded_image.webp", {height: 45} %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>

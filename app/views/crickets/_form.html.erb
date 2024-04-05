@@ -1,0 +1,103 @@
+<%= form_with model: @cricketer, data: {turbo: false} do |form|%>
+  <p><b>
+     Picture:</b> <%= form.file_field :picture %>
+  </p>
+  <p><b>
+     Name:</b> <%= form.text_field :name %>
+     <%= error_method(@cricketer,:name) %>
+  </p>
+  <p><b>
+     Country:</b> <%= form.text_field :country %>
+     <%= error_method(@cricketer,:country) %>
+  </p>
+  <p><b>
+     Age:</b> <%= form.number_field :age%>
+     <%= error_method(@cricketer,:age) %>
+  </p>
+  <p><b>
+     Matches Played:</b> <%= form.number_field :matches_played%>
+     <%= error_method(@cricketer,:matches_played) %>
+  </p>
+  <p><b>
+     Role:</b> <%= form.collection_select :role, Cricket.roles, :first, :first%>
+  </p>
+  <p><b>
+     Runs Scored:</b> <%= form.number_field :runs_scored%>
+     <%= error_method(@cricketer,:runs_scored) %>
+  </p>
+  <p><b>
+      Wickets Taken:</b> <%= form.number_field :wickets_taken%>
+      <%= error_method(@cricketer,:wickets_taken) %>
+  </p>
+  <p><b>
+      Highest Score:</b> <%= form.number_field :highest_score%>
+      <%= error_method(@cricketer,:highest_score) %>
+  </p>
+  <p><b>
+      Best Bowling:</b> <%= form.text_field :best_bowling%>
+      <%= error_method(@cricketer,:best_bowling) %>
+  </p>
+  <p><b>
+     Captian:</b> <%= form.radio_button :captain, 'true'%>
+     <%= form.label :captain_true, 'YES' %>
+     <%= form.radio_button :captain, 'false'%>
+     <%= form.label :captain_false, 'NO' %>
+  </p>
+  <p><b>
+      Retired:</b> <%= form.radio_button :retired, 'true'%>
+     <%= form.label :retired_true, 'YES' %>
+     <%= form.radio_button :retired, 'false'%>
+     <%= form.label :retired_false, 'NO' %>
+  </p>
+  <p><b>
+     Phone Numbers:
+   </b>
+  </p>
+  <p><b>
+     1-st Number:</b> <input name="cricket[phone_numbers][]" type="text"/>
+  </p>
+  <p><b>
+      2-nd Number:</b> <input name="cricket[phone_numbers][]" type="text"/>
+  </p>
+  <p><b> Addresses:
+  </b>
+  </p> <% i= 1%>
+     <%= form.fields_for :addresses, allow_destroy: true do |addresses_form| %>
+      <p><b>Address</b> <%= "#{i}"%>:</p>
+      <p>
+         <%= addresses_form.check_box :_destroy %>
+      </p>
+      <p>
+        <%= addresses_form.label :house, 'House No' %>
+        <%= addresses_form.text_field :house %>
+      </p>
+      <p>
+        <%= addresses_form.label :street, 'Street' %>
+        <%= addresses_form.text_field :street %>
+      </p>
+      <p>
+        <%= addresses_form.label :landmark, 'Landmark' %>
+        <%= addresses_form.text_field :landmark %>
+      </p>
+      <p>
+        <%= addresses_form.label :city, 'City' %>
+        <%= addresses_form.text_field :city %>
+      </p>
+      <p>
+        <%= addresses_form.label :state, 'State' %>
+        <%= addresses_form.text_field :state %>
+      </p>
+      <p>
+        <%= addresses_form.label :pincode, 'Pincode' %>
+        <%= addresses_form.text_field :pincode %>
+      </p>
+       <p>
+        <%= addresses_form.label :country, 'Country' %>
+        <%= addresses_form.text_field :country %>
+      </p>
+      <% i+=1 %>
+      <% end %>
+  <p>
+      <%= form.submit%>
+  </p>
+<% end %>

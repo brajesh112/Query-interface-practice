@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  house: MyText
+  street: MyText
+  landmark: MyText
+  city: MyText
+  state: MyText
+  pincode: MyText
+  cricket: one
+
+two:
+  house: MyText
+  street: MyText
+  landmark: MyText
+  city: MyText
+  state: MyText
+  pincode: MyText
+  cricket: two

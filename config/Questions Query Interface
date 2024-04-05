@@ -1,0 +1,263 @@
+Questions Query Interface
+1    Retrieve all cricket players or teams from the database.
+2    Find the cricket player with the highest individual score.
+3    Find the top 5 cricket players with the most wickets taken.
+4    Count the number of cricket players from a specific country (e.g., India).
+5    Update the role of a specific cricket player to "all-rounder."
+6    Find all cricket players who have retired from the game.
+7    Calculate the average runs scored by all cricket players.
+8    Find the youngest cricket player in the database.
+9    Fetch the details of the cricket player who has played the most matches.
+10    Delete all records of cricket players from a specific country (e.g., Australia).
+11    Find the top 10 cricket players based on their highest individual scores.
+12    Update the matches_played field for a specific cricket player after a new match.
+13    Find the cricket player who has the best bowling figures.
+14    Count the number of retired cricket players from a specific country (e.g., England).
+15    Calculate the total number of runs scored by all players from a particular country (e.g., South Africa).
+
+
+
+Answers
+
+1.
+Cricket.pluck(:name,:country)
+2.
+Cricket.order(:highest_score).limit(1).pluck(:name)
+3.
+Cricket.order(:wicket_taken).limit(5).pluck(:name)
+4.
+Cricket.where(country: "India").count
+5.
+Cricket.find_by(name: "").update(role: "allrounder")
+6.
+Cricket.where(retired: true).pluck(:name)
+7.
+Cricket.average(:runs_scored)
+8.
+Cricket.order(:age).first
+9.
+Cricket.order(matches_played: :desc)
+10.
+Cricket.where(country: "").delete_all
+11.
+Cricket.order(highest_score: :desc).limit(10)
+12. 
+c = Cricket.find_by(name: "").matches_played
+Cricket.find_by(name: "").update(matches_played: "#{c+1}")
+13.
+Cricket.order(best_bowling: :desc)
+14.
+Cricket.where(retired: true,country: "").count
+15.
+Cricket.where(country: "").sum(:runs_scored)
+
+
+Questions
+
+16.Find the top 5 all-rounders (players with the highest runs scored and most wickets taken) from a specific country (e.g., India).
+
+17.Calculate the average runs scored by batsmen who have played more than 50 matches.
+
+18.Find the players who have scored at least 1000 runs and have taken at least 50 wickets.
+
+19.Identify the country with the most retired players.
+
+20.List the top 10 countries with the highest average runs scored per player.
+
+21.Find the captain of the cricket team with the most matches played.
+
+22.Calculate the total runs scored and wickets taken by all-rounders (players with a role of 'all-rounder') from each country.
+
+23.Find the players who have a higher number of wickets taken than the average wickets taken by all bowlers.
+
+24.List the players who have played more than 100 matches and have a higher individual score than the average highest score of all players.
+
+25.Calculate the total runs scored by each country's cricket team and sort the result in descending order.
+
+
+
+Answers
+16.
+Cricket.where(country: "India",role: "allrounder").order(highest_score: :desc, wicket_taken: :desc).limit(5).pluck(:name)
+17.
+Cricket.where(role: "batter").group(:averages_runs).having("matches_played > ?",  50).average(:runs_scored)
+18.
+Cricket.group(:name).having("runs_scored >= ?", 1000).and(Cricket.having("wickets_taken >= ?", 50)).pluck(:name)
+19.
+Cricket.all.where(retired: true).group(:country).sort {|a1,a2| a2[1]<=>a1[1]}.first.country
+
+20.  
+		hashh = Hash.new
+		for i in (0...Cricket.group(:country).count.count)
+			cc = Cricket.group(:country).sum(:runs_scored).values[i] / Cricket.group(:country).count.values[i]
+			# h.store(Cricket.group(:country).sum(:runs_scored).keys[i],c)
+			hashh[:"#{Cricket.group(:country).sum(:runs_scored).keys[i]}"] = cc
+		end
+		hashh.sort_by{|_key, value| value}.last
+ 	end
+
+OR
+
+Cricket.all.group(:country).average(:runs_scored).sort {|a1,a2| a2[1]<=>a1[1]}.first[1].to_i
+
+
+
+21.
+Cricket.order(:mathces_played).where(captain: true).limit(1)
+22.
+Cricket.group(:country).where(role:"allrounder").sum(:runs_scored)
+Cricket.group(:country).where(role:"allrounder").sum(:wickets_taken)
+
+23.
+Cricket.group(:name).having("wickets_taken > ?", Cricket.where(role:"bowler").average(:wickets_taken)).pluck(:name)
+24.
+Cricket.group(:name).having("highest_score > ?",Cricket.average(:highest_score)).and(Cricket.having("matches_played > ?", 100)).pluck(:name)
+25.
+ Cricket.group(:country).sum(:runs_scored).sort {|a1,a2| a2[1]<=>a1[1]}
+
+
+
+
+
+Questions
+
+26.Find the top 5 countries with the highest difference between the total runs scored and total wickets taken by their players.
+
+27.Calculate the average age of players from each country and list the countries in ascending order of average age.
+
+28.Identify the player with the highest individual score from the country with the most retired players.
+
+29.List the players who have a higher number of runs scored than the average runs scored by players from their own country.
+
+30.Find the top 5 players with the highest average runs scored per match (runs per match played).
+
+31.Calculate the total number of matches played by all players who have scored at least 1000 runs and have taken at least 50 wickets.
+
+32.Find the player with the highest individual score who has not retired and is not a captain.
+
+33.List the players who have played more than 50 matches and have an average of at least 30 runs scored per match.
+
+34.Calculate the percentage of retired players for each country (percentage of players who have retired).
+
+35.Find the player with the highest total runs scored and the highest total wickets taken (considering both batting and bowling performances).
+
+
+ Answers
+
+ 26. hashh = []
+		for num in (0...Cricket.group(:country).count.count)
+			cric =Cricket.group(:country).sum(:runs_scored).values[num] - Cricket.group(:country).sum(:wickets_taken).values[num]
+			hashh << {Cricket.group(:country).sum(:runs_scored).keys[num] => cric}
+		end
+		# h.sort_by {|key, values| values}
+		hashh.sort_by { |k| k.values}.reverse.first(5)
+
+
+
+ 27.Cricket.group(:country).average(:age).sort{|a1,a2| a2[1]<=>a1[1]}
+
+ 28.Cricket.where(country: Cricket.group(:country).where(retired: true).count.first[0]).order(highest_score: :desc).limit(1).pluck(:name, :highest_score)
+
+ 29.
+  for i in (0...Cricket.group(:country).count.count)
+	  puts Cricket.where("runs_scored > ? ", Cricket.group(:country).average(:runs_scored).values[i]).and(Cricket.where(country: Cricket.group(:country).average(:runs_scored).keys[i])).pluck(:name)
+	end
+
+	30.
+	arr = []
+ 		for i in (0...Cricket.all.size)
+    	c = Cricket.all.pluck(:runs_scored)[i] / Cricket.all.pluck(:matches_played)[i]
+   		arr << {Cricket.all.pluck(:name)[i] => c}
+ 		end
+ 		arr.sort_by { |k| k.values}.reverse.first(5)
+
+ 31.Cricket.where("runs_scored >= ?" ,1000).and(Cricket.where("wickets_taken >= ?", 50)).sum(:matches_played)
+
+ 32.Cricket.order(:highest_score).where(retired: false, captain: false).last
+
+
+ 33.
+ arr = []
+ 		for i in (0...Cricket.all.size)
+    	c = Cricket.all.pluck(:runs_scored)[i] / Cricket.all.pluck(:matches_played)[i]
+   		if(c >= 30)
+   		arr << Cricket.where("matches_played > ?", 50).pluck(:name)[i]
+   		end
+ 		end
+ 		arr
+
+
+ 34.
+  		hashh = {}
+
+ 		Cricket.where(retired:true).group_by{|cricket| cricket.country}.each{ |key, val| hashh.store(key,(val.count * 100 )/ Cricket.where(country: key).count)}
+ 		hashh
+
+
+ 35.
+ Cricket.where(role:"allrounder").order(highest_score: :desc,wickets_taken: :desc).limit(1).pluck(:name,:highest_score,:wickets_taken)
+
+
+
+	hashh = Hash.new
+		for i in (0...Cricket.group(:country).count.count)
+			cc = Cricket.group(:country).sum(:runs_scored).values[i] / Cricket.group(:country).count.values[i]
+			# h.store(Cricket.group(:country).sum(:runs_scored).keys[i],c)
+			hashh[:"#{Cricket.group(:country).sum(:runs_scored).keys[i]}"] = cc
+		end
+		hashh.sort_by{|_key, value| value}.last
+
+
+
+
+
+
+
+Scenario:
+Let's consider a simple database schema for a blog application with two tables: users and posts. The users table contains information about blog authors, and the posts table contains information about individual blog posts. The posts table has a foreign key user_id that references the id column in the users table, indicating the author of each post.
+
+users table: name
+posts table: title, content, user_id
+
+Questions:
+
+Retrieve all posts along with the name of their authors.
+Find all users who have authored at least one post and display their names.
+List all posts with their titles and the corresponding author's name, but exclude posts without an associated user (orphan posts).
+Get all users who have authored at least one post and eager load their associated posts.
+Find a specific post by its id, including the name of the author.
+Retrieve all users and their posts, ordered by the creation timestamp of the posts.
+
+
+
+#Answers
+	1. p = Post.includes(:user)
+	p.each do |post|
+  puts post.user.name
+	end
+
+OR
+
+	Post.eager_load(:user).select('users.name, posts.*').each do |p|
+  puts p.attributes
+  end
+or
+Post.joins(:user).pluck('users.id,users.name, posts.title,posts.content')\
+OR
+Post.joins(:user).as_json(only: [:id, :title], include: { user: {only: [:id,:name]}})
+
+	2. User.joins(:posts).distinct.pluck(:name)
+
+	3. Post.joins(:user).includes(:user).select('users.name, posts.*').each do |p|
+  puts p.attributes
+  end
+
+	4. User.joins(:posts).eager_load(:posts).distinct
+
+	5. p =  Post.includes(:user).find(1)
+	   p.user.name
+
+	6.  Post.joins(:user).includes(:user).select('users.name, posts.*').order(:created_at).each do |data|
+ puts  data.attributes
+ end
+

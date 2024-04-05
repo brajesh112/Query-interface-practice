@@ -1,0 +1,39 @@
+<%= image_tag "/uploads/#{@cricketer.name}.jpeg", {height: 45} %> 
+<table>
+  <thead>
+    <tr>
+      <th><b>Name:</b> <%= @cricketer.name %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+      <tr>
+        <td><b>Id:</b> </td><td> <%= @cricketer.id %></td></tr>
+        <tr><td><b>Age:</b> </td><td><%= @cricketer.age %></td></tr>
+				<tr><td><b>Country:</b> </td><td><%= @cricketer.country %></td></tr>
+				<tr><td><b>Role:</b> </td><td> <%=@cricketer.role %></td></tr>
+				<tr><td><b>Matches Played:</b> </td><td><%= @cricketer.matches_played %></td></tr>
+				<tr><td><b>Runs Scored:</b> </td><td><%= @cricketer.runs_scored %></td></tr>
+				<tr><td><b>Wickets Taken:</b> </td><td><%= @cricketer.wickets_taken %></td></tr>
+				<tr><td><b>Highest Score:</b> </td><td><%= @cricketer.highest_score %></td></tr>
+				<tr><td><b>Best Bowling:</b> </td><td><%= @cricketer.best_bowling %></td></tr>
+				<tr><td><b>Captain Status:</b> </td><td><%= @cricketer.captain %></td></tr>
+				<tr><td><b>Retired:</b> </td><td><%= @cricketer.retired %></td></tr>
+				<tr><td><b>Phone Numbers:</b> </td><td><%= @cricketer.phone_numbers %></td></tr>
+				<tr><td><b>Addresses:</b> </td><%= addresses_method(@cricketer).html_safe%></tr>
+				<!-- <%# i= 1%>
+				<%# @cricketer.addresses.each do|address|%>
+#				<tr><td>Address <%#= i%>:</td><td>
+				Id:  <%#= address.id %>,
+				House_No:  <%#= address.house %>,
+				Street:   <%#= address.street %>,
+				Landmark: <%#= address.landmark %>,
+				City: <%#= address.city %>,
+				State: <%#= address.state %>,
+				Pincode: <%#= address.pincode %>
+				</td></tr>
+				<%# i+=1 %>
+			<%# end %> -->
+				
+  </tbody>
+</table>

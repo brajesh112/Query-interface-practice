@@ -1,0 +1,38 @@
+<h1> Teams Are Comming Soon </h1>
+
+<h1>Listing Players</h1>
+
+<%= form_tag '/crickets', method: :get do %>
+  <%= text_field_tag :query, '', placeholder: 'Enter Id to search Player'%>
+  <%= button_tag :submit %>
+<% end %>
+<% if @cricketers.empty? %>
+<h2>Player Does not Exists With This Id</h2>
+<% else %>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th colspan="2">Player</th>
+      <th>Country</th>
+      <th colspan="3"> Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @cricketers.each do |cricketer| %>
+      <tr>
+        <td><%= cricketer.id%></td>
+        <td colspan="2"><%= cricketer.name %></td>
+        <td><%= cricketer.country %></td>
+        <td><%= link_to "Show", cricket_path(cricketer) %></td>
+        <td><%= link_to "Edit", edit_cricket_path(cricketer) %></td>
+        <td><%= link_to "Destroy", cricket_path(cricketer), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+<br>
+
+<%= link_to "New cricketer", new_cricket_path %>
